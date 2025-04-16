@@ -1,0 +1,237 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_title %}{{ _('Dashboard') }}{% endblock %}
+
+{% block admin_header %}{{ _('Admin Dashboard') }}{% endblock %}
+
+{% block admin_content %}
+<div class="row mb-4">
+    <div class="col-md-3 mb-4">
+        <div class="admin-card h-100">
+            <div class="card-body">
+                <div class="stat-card">
+                    <div class="stat-card-icon bg-primary">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <h3>{{ total_products }}</h3>
+                        <p>{{ _('Total Products') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="admin-card h-100">
+            <div class="card-body">
+                <div class="stat-card">
+                    <div class="stat-card-icon bg-success">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <h3>{{ total_categories }}</h3>
+                        <p>{{ _('Categories') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="admin-card h-100">
+            <div class="card-body">
+                <div class="stat-card">
+                    <div class="stat-card-icon bg-warning">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <h3>{{ total_banners }}</h3>
+                        <p>{{ _('Active Banners') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="admin-card h-100">
+            <div class="card-body">
+                <div class="stat-card">
+                    <div class="stat-card-icon bg-info">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <h3>{{ view_counts|sum if view_counts else 0 }}</h3>
+                        <p>{{ _('Total Views') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-8 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Daily Views (Last 7 Days)') }}</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary time-range-selector active" data-days="7">7D</button>
+                    <button class="btn btn-sm btn-outline-secondary time-range-selector" data-days="30">30D</button>
+                    <button class="btn btn-sm btn-outline-secondary time-range-selector" data-days="90">90D</button>
+                </div>
+            </div>
+            <div class="admin-card-body">
+                <div class="chart-container">
+                    <canvas id="dailyActivityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Most Viewed Products') }}</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>{{ _('Product') }}</th>
+                                <th class="text-end">{{ _('Views') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product, view_count in most_viewed %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('products.product_detail', slug=product.slug) }}" target="_blank">
+                                        {{ product.title|truncate(30) }}
+                                    </a>
+                                </td>
+                                <td class="text-end">{{ view_count }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center">{{ _('No data available') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Most Clicked Products') }}</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="chart-container">
+                    <canvas id="clicksByProductChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Most Viewed Products') }}</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="chart-container">
+                    <canvas id="viewsByProductChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Recent Activity') }}</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="real-time-container">
+                    <ul class="list-group" id="realtimeViewsList">
+                        {% for view in recent_views %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <a href="{{ url_for('products.product_detail', slug=view.product.slug) }}" target="_blank">
+                                    {{ view.product.title|truncate(40) }}
+                                </a>
+                            </span>
+                            <span class="badge bg-primary rounded-pill">{{ view.timestamp.strftime('%H:%M:%S') }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center">{{ _('No recent activity') }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="admin-card h-100">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">{{ _('Conversion Rate') }}</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="row align-items-center mb-4">
+                    <div class="col">
+                        <h6 class="mb-0">{{ _('Overall Conversion Rate') }}</h6>
+                        <p class="text-muted small mb-0">{{ _('Clicks / Views ratio') }}</p>
+                    </div>
+                    <div class="col-auto">
+                        <h3 class="mb-0 text-primary" id="overallConversionRate">0%</h3>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>{{ _('Product') }}</th>
+                                <th class="text-center">{{ _('Views') }}</th>
+                                <th class="text-center">{{ _('Clicks') }}</th>
+                                <th class="text-end">{{ _('Rate') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conversionRateTableBody">
+                            <tr>
+                                <td colspan="4" class="text-center">{{ _('Loading data...') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all charts on page load
+        initCharts();
+        
+        // Load conversion rate data
+        loadConversionRateData();
+        
+        // Start real-time updates
+        startRealTimeUpdates();
+    });
+</script>
+{% endblock %}

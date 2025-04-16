@@ -1,0 +1,100 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_title %}{{ _('Banners') }}{% endblock %}
+
+{% block admin_header %}{{ _('Manage Banners') }}{% endblock %}
+
+{% block admin_content %}
+<div class="admin-card mb-4">
+    <div class="admin-card-header">
+        <h5 class="admin-card-title">{{ _('Banner List') }}</h5>
+        <a href="{{ url_for('admin.add_banner') }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i> {{ _('Add New Banner') }}
+        </a>
+    </div>
+    <div class="admin-card-body">
+        {% if banners %}
+        <div class="row">
+            {% for banner in banners %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <img src="{{ url_for('static', filename='uploads/' + banner.filename) }}" class="card-img-top" alt="{{ banner.title }}" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ banner.title or _('Unnamed Banner') }}</h5>
+                        
+                        {% if banner.link %}
+                        <p class="card-text">
+                            <a href="{{ banner.link }}" target="_blank" class="text-truncate d-block">
+                                {{ banner.link }}
+                            </a>
+                        </p>
+                        {% endif %}
+                        
+                        <div class="mt-2">
+                            {% if banner.is_active %}
+                            <span class="badge bg-success">{{ _('Active') }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ _('Inactive') }}</span>
+                            {% endif %}
+                            
+                            <small class="text-muted d-block mt-1">
+                                {{ _('Created') }}: {{ banner.created_at.strftime('%Y-%m-%d') }}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.edit_banner', id=banner.id) }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit me-1"></i> {{ _('Edit') }}
+                            </a>
+                            
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteBannerModal{{ banner.id }}">
+                                <i class="fas fa-trash me-1"></i> {{ _('Delete') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteBannerModal{{ banner.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ _('Confirm Deletion') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ _('Are you sure you want to delete this banner?') }}</p>
+                                <div class="text-center">
+                                    <img src="{{ url_for('static', filename='uploads/' + banner.filename) }}" alt="{{ banner.title }}" style="max-width: 100%; max-height: 200px; object-fit: contain;">
+                                </div>
+                                <p class="text-danger mt-3">{{ _('This action cannot be undone!') }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
+                                <form action="{{ url_for('admin.delete_banner', id=banner.id) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-danger">{{ _('Delete') }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-image fa-3x text-muted mb-3"></i>
+            <h5>{{ _('No Banners Found') }}</h5>
+            <p class="text-muted">{{ _('Get started by adding your first banner.') }}</p>
+            <a href="{{ url_for('admin.add_banner') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> {{ _('Add New Banner') }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

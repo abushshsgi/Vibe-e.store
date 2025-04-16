@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{ g.get('lang', 'en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}{{ _('Vibe-e. store') }}{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body data-theme="{{ g.theme }}">
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('products.index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="AliMarket" class="logo-img">
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <!-- Search form -->
+                    <form class="d-flex search-form mx-lg-auto" action="{{ url_for('products.search') }}" method="get">
+                        <input class="form-control" type="search" name="q" placeholder="{{ _('Search products...') }}" aria-label="Search" required value="{{ request.args.get('q', '') }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </form>
+                    
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <!-- Categories -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle nav-link-sm" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-tag fa-sm me-1"></i>{{ _('Categories') }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                                {% for category in categories %}
+                                <li><a class="dropdown-item" href="{{ url_for('products.category_products', slug=category.slug) }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        
+                        <!-- Wishlist -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-sm" href="{{ url_for('user.wishlist') }}">
+                                <i class="fas fa-heart fa-sm me-1"></i>{{ _('Wishlist') }}
+                            </a>
+                        </li>
+                        
+                        <!-- Language dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle nav-link-sm" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-globe fa-sm me-1"></i>{{ _('Language') }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('user.set_language', lang='en', next=request.path) }}">English</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('user.set_language', lang='ru', next=request.path) }}">Русский</a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Admin Panel -->
+                    
+                        
+    
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Main content -->
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row py-4">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-about">
+                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="AliMarket" class="footer-logo mb-3">
+                        <p class="text-muted">{{ _('Find the best products at the best prices. We showcase carefully curated products from Amazon.') }}</p>
+                        <div class="social-icons mt-3">
+                            <a href="" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://t.me/Vibe_estore" class="social-icon"><i class="fab fa-telegram"></i></a>
+                            <a href="https://www.instagram.com/vibe_estore1?igsh=MWxteHVzZzA0N3Brbg%3D%3D&utm_source=qr" class="social-icon"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">{{ _('Categories') }}</h6>
+                    <ul class="footer-links">
+                        {% for category in categories[:5] %}
+                        <li><a href="{{ url_for('products.category_products', slug=category.slug) }}">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">{{ _('Quick Links') }}</h6>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('products.index') }}">{{ _('Home') }}</a></li>
+                        <li><a href="{{ url_for('user.wishlist') }}">{{ _('Wishlist') }}</a></li>
+                        <!-- <li><a href="{{ url_for('admin.dashboard') }}">{{ _('Admin Panel') }}</a></li> -->
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">{{ _('Settings') }}</h6>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('user.set_theme', theme='light', next=request.path) }}">{{ _('Light Theme') }}</a></li>
+                        <li><a href="{{ url_for('user.set_theme', theme='dark', next=request.path) }}">{{ _('Dark Theme') }}</a></li>
+                        <li><a href="{{ url_for('user.set_language', lang='en', next=request.path) }}">{{ _('English') }}</a></li>
+                        <li><a href="{{ url_for('user.set_language', lang='ru', next=request.path) }}">{{ _('Russian') }}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">{{ _('Contact Us') }}</h6>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> New York, NY 10012</li>
+                        <li><i class="fas fa-envelope me-2"></i>vibestoree1@gmail.com</li>
+                        <!-- <li><i class="fas fa-phone me-2"></i> + 01 234 567 88</li> -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="row py-3 border-top">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0">
+                            © {{ g.current_year }} {{ _('Vibe-e Store') }}. {{ _('All rights reserved.') }}
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <p class="small text-muted mb-0">
+                            {{ _('"As an Amazon Associate, I earn from qualifying purchases. All trademarks are the property of their respective owners."') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

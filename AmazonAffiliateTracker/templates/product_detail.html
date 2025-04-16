@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.title }} | {{ _('Amazon Affiliate Marketplace') }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('products.index') }}">{{ _('Home') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('products.category_products', slug=product.category.slug) }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.title|truncate(40) }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-lg-6 mb-4">
+            {% if product.images %}
+                {% set primary_image = product.get_primary_image() %}
+                <div class="text-center mb-3">
+                    <img src="{{ url_for('static', filename='uploads/' + primary_image.filename) }}" id="mainProductImage" class="product-detail-image" alt="{{ product.title }}">
+                </div>
+                
+                {% if product.images|length > 1 %}
+                <div class="product-thumbnails">
+                    {% for image in product.images %}
+                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
+                         class="product-thumbnail {% if image.is_primary %}active{% endif %}" 
+                         data-full-img="{{ url_for('static', filename='uploads/' + image.filename) }}" 
+                         alt="{{ product.title }}" onclick="document.getElementById('mainProductImage').src = this.getAttribute('data-full-img');">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="text-center p-5 bg-light rounded">
+                <i class="fas fa-image fa-5x text-muted mb-3"></i>
+                <p class="text-muted">{{ _('No image available') }}</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <h1 class="h2 mb-3">{{ product.title }}</h1>
+            
+            <div class="mb-3">
+                <a href="{{ url_for('products.category_products', slug=product.category.slug) }}" class="badge bg-secondary text-decoration-none">
+                    {{ product.category.name }}
+                </a>
+                
+                {% if product.is_new %}
+                <span class="badge badge-new">{{ _('New') }}</span>
+                {% endif %}
+                
+                {% if product.is_hot %}
+                <span class="badge badge-hot">{{ _('Hot') }}</span>
+                {% endif %}
+                
+                {% if product.is_trending %}
+                <span class="badge badge-trending">{{ _('Trending') }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="product-detail-price">${{ "%.2f"|format(product.price) }}</div>
+            
+            <!-- Product Rating -->
+            <div class="product-rating mb-3">
+                {% for i in range(5) %}
+                    {% if i < product.rating %}
+                    <i class="fas fa-star"></i>
+                    {% else %}
+                    <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+                {% if product.rating > 0 %}
+                <span class="ms-2 text-muted">({{ product.rating }} {{ _('of 5') }})</span>
+                {% else %}
+                <span class="ms-2 text-muted">{{ _('No ratings yet') }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                {{ product.description|safe }}
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="{{ amazon_link }}" class="btn btn-primary btn-lg product-affiliate-link" data-product-id="{{ product.id }}" target="_blank">
+                    <i class="fab fa-amazon me-2"></i>{{ _('Buy on Amazon') }}
+                </a>
+                
+                <button class="wishlist-btn fs-4" data-product-id="{{ product.id }}">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <div>
+                    {{ _('This is an affiliate link. We earn a commission for qualified purchases.') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    {% if related_products %}
+    <section class="mt-5">
+        <h3 class="section-title mb-4">{{ _('Related Products') }}</h3>
+        
+        <div class="row">
+            {% for product in related_products %}
+            <div class="col-6 col-md-3 mb-4">
+                <div class="card product-card">
+                    <div class="product-badges">
+                        {% if product.is_new %}
+                        <span class="badge badge-new">{{ _('New') }}</span>
+                        {% endif %}
+                        {% if product.is_hot %}
+                        <span class="badge badge-hot">{{ _('Hot') }}</span>
+                        {% endif %}
+                        {% if product.is_trending %}
+                        <span class="badge badge-trending">{{ _('Trending') }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
+                        {% set primary_image = product.get_primary_image() %}
+                        {% if primary_image %}
+                        <img src="{{ url_for('static', filename='uploads/' + primary_image.filename) }}" class="card-img-top" alt="{{ product.title }}">
+                        {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light">
+                            <i class="fas fa-image text-muted fa-3x"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="text-decoration-none text-dark">
+                                {{ product.title }}
+                            </a>
+                        </h5>
+                        <!-- Product Rating -->
+                        <div class="product-rating mb-2">
+                            {% for i in range(5) %}
+                                {% if i < product.rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="product-price mb-2">${{ "%.2f"|format(product.price) }}</div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn btn-primary btn-sm">
+                                {{ _('View Details') }}
+                            </a>
+                            <button class="wishlist-btn" data-product-id="{{ product.id }}" data-bs-toggle="tooltip" title="{{ _('Add to Wishlist') }}">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Server Error') }} | {{ _('Vibe-e Store') }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="error-page">
+        <h1 class="display-1">500</h1>
+        <i class="fas fa-exclamation-triangle fa-5x text-danger mb-4"></i>
+        <h2>{{ _('Server Error') }}</h2>
+        <p class="lead text-muted mb-4">{{ _('Sorry, something went wrong on our server. We are working to fix the problem.') }}</p>
+        <a href="{{ url_for('products.index') }}" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i> {{ _('Return to Homepage') }}
+        </a>
+    </div>
+</div>
+{% endblock %}

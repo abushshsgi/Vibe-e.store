@@ -1,0 +1,260 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_title %}
+    {% if banner %}{{ _('Edit Banner') }}{% else %}{{ _('Add Banner') }}{% endif %}
+{% endblock %}
+
+{% block admin_header %}
+    {% if banner %}{{ _('Edit Banner') }}{% else %}{{ _('Add New Banner') }}{% endif %}
+{% endblock %}
+
+{% block admin_css %}
+<style>
+    .nav-tabs .nav-link {
+        color: var(--admin-text-color);
+    }
+    .nav-tabs .nav-link.active {
+        font-weight: 600;
+        color: var(--admin-primary);
+    }
+    .banner-preview {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border: 1px solid var(--admin-border-color);
+        border-radius: 0.25rem;
+    }
+    .image-upload-preview {
+        width: 100%;
+        height: 200px;
+        background-color: var(--admin-bg-secondary);
+        border: 1px dashed var(--admin-border-color);
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-card mb-4">
+    <div class="admin-card-header">
+        <h5 class="admin-card-title">
+            {% if banner %}{{ _('Edit Banner') }}{% else %}{{ _('Add New Banner') }}{% endif %}
+        </h5>
+        <a href="{{ url_for('admin.banners') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> {{ _('Back to Banners') }}
+        </a>
+    </div>
+    
+    <div class="admin-card-body">
+        <form class="admin-form" method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Banner Image -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Banner Image') }}</h6>
+                        
+                        {% if banner %}
+                        <div class="mb-3 text-center">
+                            <img src="{{ url_for('static', filename='uploads/' + banner.filename) }}" alt="{{ banner.title }}" class="banner-preview">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            {{ form.image.label(class="form-label") }}
+                            <div class="image-upload-preview" id="imagePreviewContainer">
+                                <div class="text-center">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-2"></i>
+                                    <p class="mb-0">{{ _('Click to select image or drag and drop') }}</p>
+                                </div>
+                            </div>
+                            {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else ""), id="bannerImageInput") }}
+                            {% for error in form.image.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">
+                                {{ _('Recommended size: 1200x400 pixels. Max file size: 2MB.') }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Banner Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Banner Information') }}</h6>
+                        
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                            {% for error in form.title.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.link.label(class="form-label") }}
+                            {{ form.link(class="form-control" + (" is-invalid" if form.link.errors else "")) }}
+                            {% for error in form.link.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">{{ _('URL where the banner will link to (can be an affiliate link)') }}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Translations Tab -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Translations') }}</h6>
+                        
+                        <ul class="nav nav-tabs mb-3" id="translationTabs" role="tablist">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if loop.first %}active{% endif %}" 
+                                            id="{{ lang }}-tab" 
+                                            data-bs-toggle="tab" 
+                                            data-bs-target="#{{ lang }}-content" 
+                                            type="button" 
+                                            role="tab" 
+                                            aria-controls="{{ lang }}-content" 
+                                            aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                                        {{ lang_name }}
+                                    </button>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="tab-content" id="translationTabsContent">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                                     id="{{ lang }}-content" 
+                                     role="tabpanel" 
+                                     aria-labelledby="{{ lang }}-tab">
+                                    
+                                    {% set title_field = 'title_' + lang %}
+                                    
+                                    <div class="mb-3">
+                                        {% set field = 'title_' + lang %}
+                                        <label class="form-label">{{ _('Title') }} ({{ lang_name }})</label>
+                                        <input type="text" name="{{ field }}" id="{{ field }}" 
+                                               value="{{ (form[field].data or '') }}" class="form-control">
+                                        <div class="form-text">{{ _('Leave blank to use the default English title') }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="admin-card mb-3">
+                        <div class="admin-card-header">
+                            <h5 class="admin-card-title">{{ _('Banner Status') }}</h5>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="mb-3 form-check">
+                                {{ form.is_active(class="form-check-input") }}
+                                {{ form.is_active.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card">
+                        <div class="admin-card-body">
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="fas fa-save me-1"></i> 
+                                {% if banner %}{{ _('Update Banner') }}{% else %}{{ _('Add Banner') }}{% endif %}
+                            </button>
+                            
+                            <a href="{{ url_for('admin.banners') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-times me-1"></i> {{ _('Cancel') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput = document.getElementById('bannerImageInput');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        
+        if (imageInput && previewContainer) {
+            previewContainer.addEventListener('click', function() {
+                imageInput.click();
+            });
+            
+            imageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        previewContainer.innerHTML = `<img src="${e.target.result}" class="img-fluid" style="max-height: 200px;">`;
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    previewContainer.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-2"></i>
+                            <p class="mb-0">{{ _('Click to select image or drag and drop') }}</p>
+                        </div>
+                    `;
+                }
+            });
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                previewContainer.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                previewContainer.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                previewContainer.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                previewContainer.style.borderColor = 'var(--admin-primary)';
+                previewContainer.style.backgroundColor = 'rgba(255, 153, 0, 0.05)';
+            }
+            
+            function unhighlight() {
+                previewContainer.style.borderColor = 'var(--admin-border-color)';
+                previewContainer.style.backgroundColor = 'var(--admin-bg-secondary)';
+            }
+            
+            previewContainer.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files && files.length) {
+                    imageInput.files = files;
+                    const event = new Event('change');
+                    imageInput.dispatchEvent(event);
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

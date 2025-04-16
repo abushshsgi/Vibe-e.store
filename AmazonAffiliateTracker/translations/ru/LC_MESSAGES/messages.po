@@ -1,0 +1,568 @@
+# Russian translations for Amazon Affiliate Marketplace.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-01-01 00:00+0000\n"
+"PO-Revision-Date: 2023-01-01 00:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+# General
+msgid "Amazon Affiliate Marketplace"
+msgstr "Партнерский Маркетплейс Amazon"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Wishlist"
+msgstr "Избранное"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Switch theme"
+msgstr "Сменить тему"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Search products..."
+msgstr "Поиск товаров..."
+
+msgid "Previous"
+msgstr "Предыдущий"
+
+msgid "Next"
+msgstr "Следующий"
+
+msgid "Popular Categories"
+msgstr "Популярные категории"
+
+msgid "New Arrivals"
+msgstr "Новинки"
+
+msgid "Trending Now"
+msgstr "В тренде"
+
+msgid "Hot Deals"
+msgstr "Горячие предложения"
+
+msgid "View All"
+msgstr "Смотреть все"
+
+msgid "New"
+msgstr "Новинка"
+
+msgid "Hot"
+msgstr "Горячее"
+
+msgid "Trending"
+msgstr "В тренде"
+
+msgid "View Details"
+msgstr "Подробнее"
+
+msgid "Add to Wishlist"
+msgstr "В избранное"
+
+msgid "Amazon Affiliate Shop"
+msgstr "Партнерский Магазин Amazon"
+
+msgid "Find the best products at the best prices. We showcase carefully curated products from Amazon."
+msgstr "Найдите лучшие товары по лучшим ценам. Мы представляем тщательно отобранные товары с Amazon."
+
+msgid "Quick Links"
+msgstr "Быстрые ссылки"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Light Theme"
+msgstr "Светлая тема"
+
+msgid "Dark Theme"
+msgstr "Темная тема"
+
+msgid "English"
+msgstr "Английский"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."
+
+msgid "This site is not affiliated with Amazon. All trademarks belong to their respective owners."
+msgstr "Этот сайт не связан с Amazon. Все товарные знаки принадлежат их соответствующим владельцам."
+
+# Product Details
+msgid "Buy on Amazon"
+msgstr "Купить на Amazon"
+
+msgid "This is an affiliate link. We earn a commission for qualified purchases."
+msgstr "Это партнерская ссылка. Мы получаем комиссию за подходящие покупки."
+
+msgid "Related Products"
+msgstr "Похожие товары"
+
+msgid "No image available"
+msgstr "Изображение недоступно"
+
+# Category and Search
+msgid "Price: Low to High"
+msgstr "Цена: от низкой к высокой"
+
+msgid "Price: High to Low"
+msgstr "Цена: от высокой к низкой"
+
+msgid "Most Popular"
+msgstr "Самые популярные"
+
+msgid "Newest"
+msgstr "Новейшие"
+
+msgid "Showing"
+msgstr "Показано"
+
+msgid "results"
+msgstr "результатов"
+
+msgid "No Products Found"
+msgstr "Товары не найдены"
+
+msgid "There are no products in this category yet. Check back later or explore other categories."
+msgstr "В этой категории пока нет товаров. Загляните позже или изучите другие категории."
+
+msgid "Back to Home"
+msgstr "Вернуться на главную"
+
+msgid "Search Results for"
+msgstr "Результаты поиска для"
+
+msgid "We couldn't find any products matching your search query. Try different keywords or browse our categories."
+msgstr "Мы не нашли товаров, соответствующих вашему запросу. Попробуйте другие ключевые слова или просмотрите наши категории."
+
+# Wishlist
+msgid "My Wishlist"
+msgstr "Моё избранное"
+
+msgid "Your wishlist is empty"
+msgstr "Ваш список избранного пуст"
+
+msgid "Browse our products and add items to your wishlist."
+msgstr "Просмотрите наши товары и добавьте их в избранное."
+
+msgid "Browse Products"
+msgstr "Просмотр товаров"
+
+msgid "Product already in wishlist"
+msgstr "Товар уже в избранном"
+
+msgid "Product added to wishlist"
+msgstr "Товар добавлен в избранное"
+
+msgid "Product removed from wishlist"
+msgstr "Товар удален из избранного"
+
+msgid "Remove from Wishlist"
+msgstr "Удалить из избранного"
+
+# Admin - General
+msgid "Admin Dashboard"
+msgstr "Панель администратора"
+
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Admin"
+msgstr "Админ"
+
+msgid "Main"
+msgstr "Главное"
+
+msgid "Catalog"
+msgstr "Каталог"
+
+msgid "Products"
+msgstr "Товары"
+
+msgid "Banners"
+msgstr "Баннеры"
+
+msgid "View Site"
+msgstr "Просмотр сайта"
+
+msgid "Go to Website"
+msgstr "Перейти на сайт"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Loading data..."
+msgstr "Загрузка данных..."
+
+msgid "No data available"
+msgstr "Нет доступных данных"
+
+# Admin - Dashboard
+msgid "Total Products"
+msgstr "Всего товаров"
+
+msgid "Active Banners"
+msgstr "Активные баннеры"
+
+msgid "Total Views"
+msgstr "Всего просмотров"
+
+msgid "Daily Views (Last 7 Days)"
+msgstr "Ежедневные просмотры (последние 7 дней)"
+
+msgid "Most Viewed Products"
+msgstr "Самые просматриваемые товары"
+
+msgid "Most Clicked Products"
+msgstr "Самые кликаемые товары"
+
+msgid "Recent Activity"
+msgstr "Последняя активность"
+
+msgid "Conversion Rate"
+msgstr "Коэффициент конверсии"
+
+msgid "Overall Conversion Rate"
+msgstr "Общий коэффициент конверсии"
+
+msgid "Clicks / Views ratio"
+msgstr "Соотношение кликов к просмотрам"
+
+msgid "Product"
+msgstr "Товар"
+
+msgid "Views"
+msgstr "Просмотры"
+
+msgid "Clicks"
+msgstr "Клики"
+
+msgid "Rate"
+msgstr "Коэффициент"
+
+msgid "No recent activity"
+msgstr "Нет недавней активности"
+
+# Admin - Products
+msgid "Manage Products"
+msgstr "Управление товарами"
+
+msgid "Product List"
+msgstr "Список товаров"
+
+msgid "Add New Product"
+msgstr "Добавить новый товар"
+
+msgid "Image"
+msgstr "Изображение"
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "View"
+msgstr "Просмотр"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Confirm Deletion"
+msgstr "Подтвердить удаление"
+
+msgid "Are you sure you want to delete the product:"
+msgstr "Вы уверены, что хотите удалить товар:"
+
+msgid "This action cannot be undone!"
+msgstr "Это действие нельзя отменить!"
+
+msgid "Get started by adding your first product."
+msgstr "Начните с добавления вашего первого товара."
+
+msgid "Add Product"
+msgstr "Добавить товар"
+
+msgid "Edit Product"
+msgstr "Редактировать товар"
+
+msgid "Product Information"
+msgstr "Информация о товаре"
+
+msgid "Product Title"
+msgstr "Название товара"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Amazon Link"
+msgstr "Ссылка Amazon"
+
+msgid "Affiliate link with your tracking ID"
+msgstr "Партнерская ссылка с вашим ID отслеживания"
+
+msgid "Translations"
+msgstr "Переводы"
+
+msgid "Title (Russian)"
+msgstr "Название (Русский)"
+
+msgid "Description (Russian)"
+msgstr "Описание (Русский)"
+
+msgid "Leave blank to use the default English title"
+msgstr "Оставьте пустым, чтобы использовать английское название по умолчанию"
+
+msgid "Leave blank to use the default English description"
+msgstr "Оставьте пустым, чтобы использовать английское описание по умолчанию"
+
+msgid "Product Images"
+msgstr "Изображения товара"
+
+msgid "Current Images"
+msgstr "Текущие изображения"
+
+msgid "Set as primary"
+msgstr "Сделать основным"
+
+msgid "Add New Images"
+msgstr "Добавить новые изображения"
+
+msgid "Drag & drop images here or click to browse"
+msgstr "Перетащите изображения сюда или нажмите для выбора"
+
+msgid "You can upload multiple images. First image will be set as primary."
+msgstr "Вы можете загрузить несколько изображений. Первое изображение будет установлено как основное."
+
+msgid "Product Details"
+msgstr "Детали товара"
+
+msgid "Product Status"
+msgstr "Статус товара"
+
+msgid "New Product"
+msgstr "Новый товар"
+
+msgid "Hot Product"
+msgstr "Горячий товар"
+
+msgid "Trending Product"
+msgstr "Трендовый товар"
+
+msgid "Update Product"
+msgstr "Обновить товар"
+
+msgid "Back to Products"
+msgstr "Вернуться к товарам"
+
+# Admin - Categories
+msgid "Manage Categories"
+msgstr "Управление категориями"
+
+msgid "Category List"
+msgstr "Список категорий"
+
+msgid "Add New Category"
+msgstr "Добавить новую категорию"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Created"
+msgstr "Создано"
+
+msgid "Are you sure you want to delete the category:"
+msgstr "Вы уверены, что хотите удалить категорию:"
+
+msgid "Cannot delete this category because it has products."
+msgstr "Невозможно удалить эту категорию, так как в ней есть товары."
+
+msgid "Please reassign or delete the products in this category first."
+msgstr "Пожалуйста, сначала переназначьте или удалите товары в этой категории."
+
+msgid "No Categories Found"
+msgstr "Категории не найдены"
+
+msgid "Get started by adding your first category."
+msgstr "Начните с добавления вашей первой категории."
+
+msgid "Add Category"
+msgstr "Добавить категорию"
+
+msgid "Edit Category"
+msgstr "Редактировать категорию"
+
+msgid "Category Information"
+msgstr "Информация о категории"
+
+msgid "Category Name"
+msgstr "Название категории"
+
+msgid "Name (Russian)"
+msgstr "Название (Русский)"
+
+msgid "Leave blank to use the default English name"
+msgstr "Оставьте пустым, чтобы использовать английское название по умолчанию"
+
+msgid "Update Category"
+msgstr "Обновить категорию"
+
+msgid "Back to Categories"
+msgstr "Вернуться к категориям"
+
+msgid "Category Info"
+msgstr "Информация о категории"
+
+msgid "Last updated"
+msgstr "Последнее обновление"
+
+msgid "Slug"
+msgstr "Ссылка"
+
+# Admin - Banners
+msgid "Manage Banners"
+msgstr "Управление баннерами"
+
+msgid "Banner List"
+msgstr "Список баннеров"
+
+msgid "Add New Banner"
+msgstr "Добавить новый баннер"
+
+msgid "Unnamed Banner"
+msgstr "Баннер без названия"
+
+msgid "Active"
+msgstr "Активный"
+
+msgid "Inactive"
+msgstr "Неактивный"
+
+msgid "Are you sure you want to delete this banner?"
+msgstr "Вы уверены, что хотите удалить этот баннер?"
+
+msgid "No Banners Found"
+msgstr "Баннеры не найдены"
+
+msgid "Get started by adding your first banner."
+msgstr "Начните с добавления вашего первого баннера."
+
+msgid "Add Banner"
+msgstr "Добавить баннер"
+
+msgid "Edit Banner"
+msgstr "Редактировать баннер"
+
+msgid "Banner Image"
+msgstr "Изображение баннера"
+
+msgid "Click to select image or drag and drop"
+msgstr "Нажмите, чтобы выбрать изображение, или перетащите его"
+
+msgid "Recommended size: 1200x400 pixels. Max file size: 2MB."
+msgstr "Рекомендуемый размер: 1200x400 пикселей. Максимальный размер файла: 2 МБ."
+
+msgid "Banner Information"
+msgstr "Информация о баннере"
+
+msgid "Banner Title"
+msgstr "Название баннера"
+
+msgid "Banner Link"
+msgstr "Ссылка баннера"
+
+msgid "URL where the banner will link to (can be an affiliate link)"
+msgstr "URL, на который будет ссылаться баннер (может быть партнерской ссылкой)"
+
+msgid "Banner Status"
+msgstr "Статус баннера"
+
+msgid "Update Banner"
+msgstr "Обновить баннер"
+
+msgid "Back to Banners"
+msgstr "Вернуться к баннерам"
+
+# Errors
+msgid "Page Not Found"
+msgstr "Страница не найдена"
+
+msgid "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+msgstr "Страница, которую вы ищете, возможно, была удалена, переименована или временно недоступна."
+
+msgid "Return to Homepage"
+msgstr "Вернуться на главную"
+
+msgid "Server Error"
+msgstr "Ошибка сервера"
+
+msgid "Sorry, something went wrong on our server. We are working to fix the problem."
+msgstr "Извините, на нашем сервере что-то пошло не так. Мы работаем над устранением проблемы."
+
+msgid "Error uploading image"
+msgstr "Ошибка при загрузке изображения"
+
+# Success messages
+msgid "Category added successfully"
+msgstr "Категория успешно добавлена"
+
+msgid "Category updated successfully"
+msgstr "Категория успешно обновлена"
+
+msgid "Category deleted successfully"
+msgstr "Категория успешно удалена"
+
+msgid "Product added successfully"
+msgstr "Товар успешно добавлен"
+
+msgid "Product updated successfully"
+msgstr "Товар успешно обновлен"
+
+msgid "Product deleted successfully"
+msgstr "Товар успешно удален"
+
+msgid "Banner added successfully"
+msgstr "Баннер успешно добавлен"
+
+msgid "Banner updated successfully"
+msgstr "Баннер успешно обновлен"
+
+msgid "Banner deleted successfully"
+msgstr "Баннер успешно удален"
+
+msgid "Cannot delete category that has products"
+msgstr "Невозможно удалить категорию, содержащую товары"

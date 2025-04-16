@@ -1,0 +1,369 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_title %}
+    {% if product %}{{ _('Edit Product') }}{% else %}{{ _('Add Product') }}{% endif %}
+{% endblock %}
+
+{% block admin_header %}
+    {% if product %}{{ _('Edit Product') }}{% else %}{{ _('Add New Product') }}{% endif %}
+{% endblock %}
+
+{% block admin_css %}
+<style>
+    .nav-tabs .nav-link {
+        color: var(--admin-text-color);
+    }
+    .nav-tabs .nav-link.active {
+        font-weight: 600;
+        color: var(--admin-primary);
+    }
+    
+    .product-image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .product-image-item {
+        position: relative;
+        border: 1px solid var(--admin-border-color);
+        border-radius: 0.25rem;
+        overflow: hidden;
+    }
+    
+    .product-image-item.is-primary {
+        border-color: var(--admin-primary);
+    }
+    
+    .product-image-item img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+    }
+    
+    .image-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-bottom-left-radius: 0.25rem;
+    }
+    
+    .btn-image {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .image-upload-container {
+        border: 2px dashed var(--admin-border-color);
+        border-radius: 0.5rem;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        background-color: var(--admin-bg-secondary);
+    }
+    
+    .image-upload-container:hover {
+        border-color: var(--admin-primary);
+        background-color: rgba(255, 153, 0, 0.05);
+    }
+    
+    .image-upload-container input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+        color: var(--admin-text-color);
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+    
+    .upload-text {
+        color: var(--admin-text-color);
+        opacity: 0.7;
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-card mb-4">
+    <div class="admin-card-header">
+        <h5 class="admin-card-title">
+            {% if product %}{{ _('Edit Product') }}: {{ product.title }}{% else %}{{ _('Add New Product') }}{% endif %}
+        </h5>
+        <a href="{{ url_for('admin.products') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> {{ _('Back to Products') }}
+        </a>
+    </div>
+    
+    <div class="admin-card-body">
+        <form class="admin-form" method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Main Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Product Information') }}</h6>
+                        
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                            {% for error in form.title.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=6) }}
+                            {% for error in form.description.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.amazon_link.label(class="form-label") }}
+                            {{ form.amazon_link(class="form-control" + (" is-invalid" if form.amazon_link.errors else "")) }}
+                            {% for error in form.amazon_link.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">{{ _('Affiliate link with your tracking ID') }}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Translations Tab -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Translations') }}</h6>
+                        
+                        <ul class="nav nav-tabs mb-3" id="translationTabs" role="tablist">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if loop.first %}active{% endif %}" 
+                                            id="{{ lang }}-tab" 
+                                            data-bs-toggle="tab" 
+                                            data-bs-target="#{{ lang }}-content" 
+                                            type="button" 
+                                            role="tab" 
+                                            aria-controls="{{ lang }}-content" 
+                                            aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                                        {{ lang_name }}
+                                    </button>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="tab-content" id="translationTabsContent">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                                     id="{{ lang }}-content" 
+                                     role="tabpanel" 
+                                     aria-labelledby="{{ lang }}-tab">
+                                    
+                                    {% set title_field = 'title_' + lang %}
+                                    {% set desc_field = 'description_' + lang %}
+                                    
+                                    <div class="mb-3">
+                                        {% set field = 'title_' + lang %}
+                                        <label class="form-label">{{ _('Title') }} ({{ lang_name }})</label>
+                                        <input type="text" name="{{ field }}" id="{{ field }}" 
+                                               value="{{ (form[field].data or '') }}" class="form-control">
+                                        <div class="form-text">{{ _('Leave blank to use the default English title') }}</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {% set field = 'description_' + lang %}
+                                        <label class="form-label">{{ _('Description') }} ({{ lang_name }})</label>
+                                        <textarea name="{{ field }}" id="{{ field }}" rows="6"
+                                                  class="form-control">{{ (form[field].data or '') }}</textarea>
+                                        <div class="form-text">{{ _('Leave blank to use the default English description') }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Product Images -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Product Images') }}</h6>
+                        
+                        {% if product and product.images %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ _('Current Images') }}</label>
+                            <div class="product-image-grid">
+                                {% for image in product.images %}
+                                <div class="product-image-item {% if image.is_primary %}is-primary{% endif %}">
+                                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="Product image">
+                                    <div class="image-actions">
+                                        <button type="button" class="btn btn-image" onclick="selectPrimaryImage('{{ image.id }}')" title="{{ _('Set as primary') }}">
+                                            <i class="fas fa-star {% if image.is_primary %}text-warning{% endif %}"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-image" onclick="markImageForDeletion('{{ image.id }}')" title="{{ _('Delete') }}">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Hidden inputs for primary and delete image actions -->
+                            <input type="hidden" name="primary_image" id="primary_image" value="{{ product.get_primary_image().id if product.get_primary_image() else '' }}">
+                            <div id="delete_images_container"></div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if product and product.images %}
+                        <!-- Existing Product Images -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ _('Current Images') }}</label>
+                            <div class="row">
+                                {% for image in product.images %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="product-image-card {% if image.is_primary %}is-primary{% endif %}" data-image-id="{{ image.id }}">
+                                        <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ product.title }}">
+                                        
+                                        <div class="primary-badge" data-image-id="{{ image.id }}" {% if not image.is_primary %}style="display: none;"{% endif %}>
+                                            {{ _('Primary') }}
+                                        </div>
+                                        
+                                        <div class="product-image-actions">
+                                            <button type="button" class="btn btn-sm btn-light set-primary-image" data-image-id="{{ image.id }}" title="{{ _('Set as primary') }}">
+                                                <i class="fas fa-star"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger delete-image" data-image-id="{{ image.id }}" title="{{ _('Delete image') }}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Hidden checkbox for deletion -->
+                                    <input type="checkbox" name="delete_image" value="{{ image.id }}" id="delete_image_{{ image.id }}" class="d-none">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Hidden input for primary image -->
+                            <input type="hidden" name="primary_image" id="primary_image" value="">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">{% if product %}{{ _('Add New Images') }}{% else %}{{ _('Product Images') }}{% endif %}</label>
+                            <div class="image-upload-container">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="upload-text">
+                                    {{ _('Drag & drop images here or click to browse') }}
+                                </div>
+                                <input type="file" name="{% if product %}new_images{% else %}images{% endif %}" multiple accept="image/*" class="form-control" id="product_images">
+                            </div>
+                            <div class="form-text">{{ _('You can upload multiple images. First image will be set as primary.') }}</div>
+                            <div class="image-preview-container mt-3 d-flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Product Details Sidebar -->
+                    <div class="admin-card mb-3">
+                        <div class="admin-card-header">
+                            <h5 class="admin-card-title">{{ _('Product Details') }}</h5>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="mb-3">
+                                {{ form.category_id.label(class="form-label") }}
+                                {{ form.category_id(class="form-select" + (" is-invalid" if form.category_id.errors else "")) }}
+                                {% for error in form.category_id.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.price.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    {{ form.price(class="form-control" + (" is-invalid" if form.price.errors else "")) }}
+                                </div>
+                                {% for error in form.price.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card mb-3">
+                        <div class="admin-card-header">
+                            <h5 class="admin-card-title">{{ _('Product Status') }}</h5>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="mb-3 form-check">
+                                {{ form.is_new(class="form-check-input") }}
+                                {{ form.is_new.label(class="form-check-label") }}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.is_hot(class="form-check-input") }}
+                                {{ form.is_hot.label(class="form-check-label") }}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.is_trending(class="form-check-input") }}
+                                {{ form.is_trending.label(class="form-check-label") }}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.featured(class="form-check-input") }}
+                                {{ form.featured.label(class="form-check-label") }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.rating.label(class="form-label") }}
+                                {{ form.rating(class="form-select") }}
+                                <div class="rating-preview mt-2">
+                                    <div class="rating-stars">
+                                        {% for i in range(5) %}
+                                            {% if product and i < product.rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                            <i class="far fa-star text-muted"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card">
+                        <div class="admin-card-body">
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="fas fa-save me-1"></i> 
+                                {% if product %}{{ _('Update Product') }}{% else %}{{ _('Add Product') }}{% endif %}
+                            </button>
+                            
+                            <a href="{{ url_for('admin.products') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-times me-1"></i> {{ _('Cancel') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

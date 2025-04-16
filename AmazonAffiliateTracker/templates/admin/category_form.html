@@ -1,0 +1,164 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_title %}
+    {% if category %}{{ _('Edit Category') }}{% else %}{{ _('Add Category') }}{% endif %}
+{% endblock %}
+
+{% block admin_header %}
+    {% if category %}{{ _('Edit Category') }}{% else %}{{ _('Add New Category') }}{% endif %}
+{% endblock %}
+
+{% block admin_css %}
+<style>
+    .nav-tabs .nav-link {
+        color: var(--admin-text-color);
+    }
+    .nav-tabs .nav-link.active {
+        font-weight: 600;
+        color: var(--admin-primary);
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-card mb-4">
+    <div class="admin-card-header">
+        <h5 class="admin-card-title">
+            {% if category %}{{ _('Edit Category') }}: {{ category.name }}{% else %}{{ _('Add New Category') }}{% endif %}
+        </h5>
+        <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> {{ _('Back to Categories') }}
+        </a>
+    </div>
+    
+    <div class="admin-card-body">
+        <form class="admin-form" method="POST">
+            {{ form.csrf_token }}
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Main Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Category Information') }}</h6>
+                        
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                            {% for error in form.name.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=4) }}
+                            {% for error in form.description.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Translations Tab -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">{{ _('Translations') }}</h6>
+                        
+                        <ul class="nav nav-tabs mb-3" id="translationTabs" role="tablist">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if loop.first %}active{% endif %}" 
+                                            id="{{ lang }}-tab" 
+                                            data-bs-toggle="tab" 
+                                            data-bs-target="#{{ lang }}-content" 
+                                            type="button" 
+                                            role="tab" 
+                                            aria-controls="{{ lang }}-content" 
+                                            aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                                        {{ lang_name }}
+                                    </button>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="tab-content" id="translationTabsContent">
+                            {% for lang, lang_name in config['LANGUAGES'] %}
+                                {% if lang != 'en' %}
+                                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                                     id="{{ lang }}-content" 
+                                     role="tabpanel" 
+                                     aria-labelledby="{{ lang }}-tab">
+                                    
+                                    {% set name_field = 'name_' + lang %}
+                                    {% set desc_field = 'description_' + lang %}
+                                    
+                                    <div class="mb-3">
+                                        {% set field = 'name_' + lang %}
+                                        <label class="form-label">{{ _('Name') }} ({{ lang_name }})</label>
+                                        <input type="text" name="{{ field }}" id="{{ field }}" 
+                                               value="{{ (form[field].data or '') }}" class="form-control">
+                                        <div class="form-text">{{ _('Leave blank to use the default English name') }}</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {% set field = 'description_' + lang %}
+                                        <label class="form-label">{{ _('Description') }} ({{ lang_name }})</label>
+                                        <textarea name="{{ field }}" id="{{ field }}" rows="4"
+                                                  class="form-control">{{ (form[field].data or '') }}</textarea>
+                                        <div class="form-text">{{ _('Leave blank to use the default English description') }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="admin-card mb-3">
+                        <div class="admin-card-header">
+                            <h5 class="admin-card-title">{{ _('Actions') }}</h5>
+                        </div>
+                        <div class="admin-card-body">
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="fas fa-save me-1"></i> 
+                                {% if category %}{{ _('Update Category') }}{% else %}{{ _('Add Category') }}{% endif %}
+                            </button>
+                            
+                            <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-times me-1"></i> {{ _('Cancel') }}
+                            </a>
+                        </div>
+                    </div>
+                    
+                    {% if category %}
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h5 class="admin-card-title">{{ _('Category Info') }}</h5>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="mb-2">
+                                <strong>{{ _('Created') }}:</strong> 
+                                <span>{{ category.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>{{ _('Last updated') }}:</strong> 
+                                <span>{{ category.updated_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>{{ _('Products') }}:</strong> 
+                                <span>{{ category.products|length }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>{{ _('Slug') }}:</strong> 
+                                <span>{{ category.slug }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

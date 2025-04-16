@@ -1,0 +1,431 @@
+:root {
+    /* Amazon-inspired color scheme */
+    --primary: #ff9900;
+    --primary-dark: #e88a00;
+    --secondary: #146eb4;
+    --secondary-dark: #0f5a8e;
+    --dark: #232f3e;
+    --light: #f8f9fa;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    --body-bg: #fff;
+    --text-color: #333;
+    --border-color: #dee2e6;
+    --card-bg: #fff;
+    --footer-bg: #232f3e;
+    --footer-text: #fff;
+    --header-bg: #232f3e;
+    --header-text: #fff;
+    --nav-link: #fff;
+    --nav-link-hover: #ff9900;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --body-bg: #121212;
+    --text-color: #f0f0f0;
+    --border-color: #444;
+    --card-bg: #1e1e1e;
+    --header-bg: #1a1a1a;
+    --footer-bg: #1a1a1a;
+}
+
+body {
+    font-family: "Amazon Ember", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Header */
+.navbar {
+    background-color: var(--header-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--header-text) !important;
+}
+
+.navbar-nav .nav-link {
+    color: var(--nav-link) !important;
+    transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--nav-link-hover) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 153, 0, 0.1);
+}
+
+/* Main content */
+.main-content {
+    min-height: 80vh;
+    padding: 2rem 0;
+}
+
+/* Product cards */
+.product-card {
+    height: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--card-bg);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-card .card-img-top {
+    height: 200px;
+    object-fit: contain;
+    padding: 1rem;
+    background-color: #f9f9f9;
+}
+
+.product-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card .card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.4;
+    height: 2.8rem;
+    overflow: hidden;
+}
+
+.product-card .card-text {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    flex-grow: 1;
+}
+
+.product-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0.5rem 0;
+}
+
+.product-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.badge-hot {
+    background-color: var(--danger);
+}
+
+.badge-new {
+    background-color: var(--success);
+}
+
+.badge-trending {
+    background-color: var(--info);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+    background-color: var(--secondary-dark);
+    border-color: var(--secondary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Category pills */
+.category-pill {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+    text-align: center;
+}
+
+.category-pill:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Home banner */
+.home-banner {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.home-banner img {
+    width: 100%;
+    object-fit: cover;
+    max-height: 400px;
+}
+
+/* Section titles */
+.section-title {
+    position: relative;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 3rem 0 1.5rem;
+}
+
+.footer h5 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer ul li {
+    margin-bottom: 0.75rem;
+}
+
+.footer ul li a {
+    color: var(--footer-text);
+    opacity: 0.8;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.footer ul li a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Theme switcher */
+.theme-switcher {
+    cursor: pointer;
+    font-size: 1.25rem;
+}
+
+/* Search bar */
+.search-form {
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-form .form-control {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-form .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Product detail page */
+.product-detail-image {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.product-thumbnails {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.product-thumbnail {
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    object-fit: contain;
+    padding: 5px;
+}
+
+.product-thumbnail.active {
+    border-color: var(--primary);
+}
+
+.product-detail-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1rem 0;
+}
+
+.wishlist-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.wishlist-btn.active {
+    color: var(--danger);
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: var(--primary);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    margin-bottom: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 0.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    font-size: 1.2rem;
+}
+
+/* Sorting dropdown */
+.sort-dropdown .dropdown-toggle {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.sort-dropdown .dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+/* Empty states */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--text-color);
+    opacity: 0.7;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .product-card .card-img-top {
+        height: 150px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .product-detail-image {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .search-form {
+        margin: 0.5rem 0;
+        max-width: 100%;
+    }
+    
+    .product-thumbnails {
+        flex-wrap: wrap;
+    }
+    
+    .product-thumbnail {
+        width: 60px;
+        height: 60px;
+    }
+}

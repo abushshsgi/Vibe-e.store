@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="{{ g.get('lang', 'en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block admin_title %}{{ _('Admin Dashboard') }}{% endblock %} | {{ _('Amazon Affiliate Marketplace') }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet">
+    
+    {% block admin_css %}{% endblock %}
+</head>
+<body data-theme="{{ g.theme }}">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-brand">
+                <h1>
+                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="AliMarket" class="logo-img">
+              
+                </h1>
+                <button class="admin-sidebar-toggle d-lg-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="admin-sidebar-menu">
+                <h5>{{ _('Main') }}</h5>
+                <ul>
+                    <li>
+                        <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">
+                            <i class="fas fa-tachometer-alt"></i> {{ _('Dashboard') }}
+                        </a>
+                    </li>
+                </ul>
+                
+                <h5>{{ _('Catalog') }}</h5>
+                <ul>
+                    <li>
+                        <a href="{{ url_for('admin.products') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('admin.product') }}">
+                            <i class="fas fa-box"></i> {{ _('Products') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.categories') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('admin.categor') }}">
+                            <i class="fas fa-tag"></i> {{ _('Categories') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.banners') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('admin.banner') }}">
+                            <i class="fas fa-image"></i> {{ _('Banners') }}
+                        </a>
+                    </li>
+                </ul>
+                
+                <h5>{{ _('View Site') }}</h5>
+                <ul>
+                    <li>
+                        <a href="{{ url_for('products.index') }}" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> {{ _('Go to Website') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <button class="admin-sidebar-toggle d-lg-none me-2">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2>{% block admin_header %}{{ _('Dashboard') }}{% endblock %}</h2>
+                </div>
+                
+                <div class="admin-header-actions">
+                    <!-- Theme toggle -->
+                    <a href="{{ url_for('user.set_theme', theme=('light' if g.theme == 'dark' else 'dark'), next=request.path) }}" class="btn btn-outline-light btn-sm">
+                        {% if g.theme == 'dark' %}
+                        <i class="fas fa-sun"></i> {{ _('Light Mode') }}
+                        {% else %}
+                        <i class="fas fa-moon"></i> {{ _('Dark Mode') }}
+                        {% endif %}
+                    </a>
+                    
+                    <!-- Language dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe"></i>
+                            {% if session.get('lang') == 'ru' %}
+                            Русский
+                            {% else %}
+                            English
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('user.set_language', lang='en', next=request.path) }}">English</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('user.set_language', lang='ru', next=request.path) }}">Русский</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% block admin_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Admin JS -->
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/product_admin.js') }}"></script>
+    
+    {% block admin_js %}{% endblock %}
+</body>
+</html>

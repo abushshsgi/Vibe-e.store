@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('My Wishlist') }} | {{ _('Amazon Affiliate Marketplace') }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('products.index') }}">{{ _('Home') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ _('Wishlist') }}</li>
+        </ol>
+    </nav>
+    
+    <h1 class="mb-4">{{ _('My Wishlist') }}</h1>
+    
+    <div class="wishlist-container">
+        {% if wishlist_items %}
+        <div class="row">
+            {% for wishlist_item, product in wishlist_items %}
+            <div class="col-md-6 col-lg-4 mb-4 wishlist-item">
+                <div class="card product-card">
+                    <div class="product-badges">
+                        {% if product.is_new %}
+                        <span class="badge badge-new">{{ _('New') }}</span>
+                        {% endif %}
+                        {% if product.is_hot %}
+                        <span class="badge badge-hot">{{ _('Hot') }}</span>
+                        {% endif %}
+                        {% if product.is_trending %}
+                        <span class="badge badge-trending">{{ _('Trending') }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
+                        {% set primary_image = product.get_primary_image() %}
+                        {% if primary_image %}
+                        <img src="{{ url_for('static', filename='uploads/' + primary_image.filename) }}" class="card-img-top" alt="{{ product.title }}">
+                        {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light">
+                            <i class="fas fa-image text-muted fa-3x"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="text-decoration-none text-dark">
+                                {{ product.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text small text-muted">{{ product.category.name }}</p>
+                        <div class="product-price">${{ "%.2f"|format(product.price) }}</div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn btn-primary">
+                                {{ _('View Details') }}
+                            </a>
+                            <button class="wishlist-btn active" data-product-id="{{ product.id }}" data-bs-toggle="tooltip" title="{{ _('Remove from Wishlist') }}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-heart-broken"></i>
+            <h3>{{ _('Your wishlist is empty') }}</h3>
+            <p>{{ _('Browse our products and add items to your wishlist.') }}</p>
+            <a href="{{ url_for('products.index') }}" class="btn btn-primary">{{ _('Browse Products') }}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

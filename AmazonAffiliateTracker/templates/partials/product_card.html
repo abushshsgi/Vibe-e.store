@@ -1,0 +1,59 @@
+<div class="card product-card">
+    <div class="product-badges">
+        {% if product.is_new %}
+        <span class="badge badge-new">{{ _('New') }}</span>
+        {% endif %}
+        {% if product.is_hot %}
+        <span class="badge badge-hot">{{ _('Hot') }}</span>
+        {% endif %}
+        {% if product.is_trending %}
+        <span class="badge badge-trending">{{ _('Trending') }}</span>
+        {% endif %}
+        {% if product.featured %}
+        <span class="badge badge-featured">{{ _('Featured') }}</span>
+        {% endif %}
+    </div>
+    
+    <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
+        {% set primary_image = product.get_primary_image() %}
+        {% if primary_image %}
+        <img src="{{ url_for('static', filename='uploads/' + primary_image.filename) }}" class="card-img-top" alt="{{ product.title }}">
+        {% else %}
+        <div class="card-img-top d-flex align-items-center justify-content-center bg-light">
+            <i class="fas fa-image text-muted fa-3x"></i>
+        </div>
+        {% endif %}
+    </a>
+    
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="text-decoration-none text-dark">
+                {{ product.title }}
+            </a>
+        </h5>
+        
+        <!-- Product Rating -->
+        <div class="product-rating mb-2">
+            {% for i in range(5) %}
+                {% if i < product.rating %}
+                <i class="fas fa-star text-warning"></i>
+                {% else %}
+                <i class="far fa-star text-muted"></i>
+                {% endif %}
+            {% endfor %}
+            {% if product.rating > 0 %}
+            <span class="ms-1 small">({{ product.rating }})</span>
+            {% endif %}
+        </div>
+        
+        <div class="product-price mb-2">${{ "%.2f"|format(product.price) }}</div>
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn btn-primary btn-sm">
+                {{ _('View Details') }}
+            </a>
+            <button class="wishlist-btn" data-product-id="{{ product.id }}" data-bs-toggle="tooltip" title="{{ _('Add to Wishlist') }}">
+                <i class="far fa-heart"></i>
+            </button>
+        </div>
+    </div>
+</div>
